@@ -2,6 +2,7 @@ plugins {
 	id("application")
 	id("checkstyle")
 	id("jacoco")
+	id("org.sonarqube") version "7.1.0.6387"
 	id("org.springframework.boot") version "4.0.0"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("com.github.ben-manes.versions") version "0.53.0"
@@ -37,6 +38,15 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+sonar {
+	properties {
+		property("sonar.projectKey", "Jora777F_java-project-99")
+		property("sonar.organization", "jora777f")
+		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+	}
 }
 
 tasks.withType<Test> {

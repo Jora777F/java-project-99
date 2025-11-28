@@ -33,9 +33,9 @@ public class UserController {
     @Operation(summary = "Получение пользователя по идентификатору",
             description = "Позволяет получить пользователя по идентификатору",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Пользователь успешно получен",
+                @ApiResponse(responseCode = "200", description = "Пользователь успешно получен",
                             content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
-                    @ApiResponse(responseCode = "404", description = "Пользователь не найден",
+                @ApiResponse(responseCode = "404", description = "Пользователь не найден",
                             content = @Content(schema = @Schema(implementation = String.class))),
             })
     @GetMapping("/{id}")
@@ -46,8 +46,9 @@ public class UserController {
     @Operation(summary = "Получение списка пользователей",
             description = "Позволяет получить список пользователей",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Список пользователей успешно получен",
-                            content = @Content(array = @ArraySchema(arraySchema = @Schema(implementation = UserResponseDto.class)))
+                @ApiResponse(responseCode = "200", description = "Список пользователей успешно получен",
+                            content = @Content(array = @ArraySchema(arraySchema =
+                            @Schema(implementation = UserResponseDto.class)))
                     )})
     @GetMapping
     public List<UserResponseDto> findAll() {
@@ -63,8 +64,10 @@ public class UserController {
         return userService.save(userRequestDto);
     }
 
-    @Operation(summary = "Обновление пользователя", description = "Позволяет обновить информацию о пользователе",
-            responses = {@ApiResponse(responseCode = "200", description = "Информация о пользователе успешно обновлена.",
+    @Operation(summary = "Обновление пользователя", description = "Позволяет обновить "
+            + "информацию о пользователе",
+            responses = {@ApiResponse(responseCode = "200", description = "Информация о пользователе "
+                    + "успешно обновлена.",
                     content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
             })
     @PutMapping("/{id}")

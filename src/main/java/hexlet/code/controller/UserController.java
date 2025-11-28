@@ -2,6 +2,7 @@ package hexlet.code.controller;
 
 import hexlet.code.dto.user.UserRequestDto;
 import hexlet.code.dto.user.UserResponseDto;
+import hexlet.code.dto.user.UserUpdateDto;
 import hexlet.code.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -72,8 +73,8 @@ public class UserController {
             })
     @PutMapping("/{id}")
     public UserResponseDto updateById(@PathVariable Long id,
-                                      @Valid @RequestBody UserRequestDto userRequestDto) {
-        return userService.updateById(id, userRequestDto);
+                                      @Valid @RequestBody UserUpdateDto userUpdateDto) {
+        return userService.updateById(id, userUpdateDto);
     }
 
     @Operation(summary = "Удаление пользователя", description = "Позволяет удалить пользователя",

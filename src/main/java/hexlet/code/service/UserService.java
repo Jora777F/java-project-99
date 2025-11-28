@@ -2,6 +2,7 @@ package hexlet.code.service;
 
 import hexlet.code.dto.user.UserRequestDto;
 import hexlet.code.dto.user.UserResponseDto;
+import hexlet.code.dto.user.UserUpdateDto;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
@@ -41,16 +42,16 @@ public class UserService {
         return userMapper.toDto(resultUser);
     }
 
-    public UserResponseDto updateById(Long id, UserRequestDto userRequestDto) {
+    public UserResponseDto updateById(Long id, UserUpdateDto userUpdateDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found."));
 
-        if (userRequestDto.getPassword() != null) {
-            String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
-            userRequestDto.setPassword(encodedPassword);
+        if (userUpdateDto.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(userUpdateDto.getPassword());
+            userUpdateDto.setPassword(encodedPassword);
         }
 
-        User updated = userMapper.partialUpdate(userRequestDto, user);
+        User updated = userMapper.partialUpdate(userUpdateDto, user);
         User saved = userRepository.save(updated);
         return userMapper.toDto(saved);
     }

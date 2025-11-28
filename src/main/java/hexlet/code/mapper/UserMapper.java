@@ -2,6 +2,7 @@ package hexlet.code.mapper;
 
 import hexlet.code.dto.user.UserRequestDto;
 import hexlet.code.dto.user.UserResponseDto;
+import hexlet.code.dto.user.UserUpdateDto;
 import hexlet.code.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -17,5 +18,5 @@ public interface UserMapper {
     UserResponseDto toDto(User user);
     User toEntity(UserRequestDto userRequestDto);
 
-    User partialUpdate(UserRequestDto userRequestDto, @MappingTarget User user);
+    User partialUpdate(UserUpdateDto userUpdateDto, @MappingTarget User user);
 }

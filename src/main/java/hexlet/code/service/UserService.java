@@ -7,9 +7,9 @@ import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -18,6 +18,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDto findById(Long id) {
         User user = userRepository.findById(id)
@@ -33,10 +34,9 @@ public class UserService {
     }
 
     public UserResponseDto save(UserRequestDto userRequestDto) {
-        int hashCode = userRequestDto.getPassword().hashCode();
-        userRequestDto.setPassword(String.valueOf(hashCode));
+        String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
+        userRequestDto.setPassword(encodedPassword);
         User user = userMapper.toEntity(userRequestDto);
-        user.setCreatedAt(Instant.now());
         User resultUser = userRepository.save(user);
         return userMapper.toDto(resultUser);
     }
@@ -45,8 +45,8 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found."));
 
-        if (userRequestDto.getPassword() == null) {
-            String encodedPassword = String.valueOf(userRequestDto.getPassword().hashCode());
+        if (userRequestDto.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
             userRequestDto.setPassword(encodedPassword);
         }
 

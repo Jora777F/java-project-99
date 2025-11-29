@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,7 +63,7 @@ public class UserController {
         return userService.findAll();
     }
 
-    @Operation(summary = "Создание пользователя", description = "Позволяет создать пользователя",
+    @Operation(summary = "Регистрация пользователя", description = "Позволяет создать пользователя",
             responses = {@ApiResponse(responseCode = "200", description = "Пользователь успешно создан",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = UserResponseDto.class)))
@@ -73,13 +74,14 @@ public class UserController {
     }
 
     @Operation(summary = "Обновление пользователя", description = "Позволяет обновить "
-            + "информацию о пользователе",
+            + "информацию о пользователе только владельцу аккаунта",
             responses = {@ApiResponse(responseCode = "200", description = "Информация о пользователе "
                     + "успешно обновлена.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = UserResponseDto.class)))
             })
     @PutMapping("/{id}")
+    @PreAuthorize("@userUtils.isOwner(#id, authentication.name)")
     public UserResponseDto updateById(@PathVariable Long id,
                                       @Valid @RequestBody UserUpdateDto userUpdateDto) {
         return userService.updateById(id, userUpdateDto);
@@ -91,6 +93,7 @@ public class UserController {
                             schema = @Schema(implementation = String.class)))
             })
     @DeleteMapping("/{id}")
+    @PreAuthorize("@userUtils.isOwner(#id, authentication.name)")
     public void deleteById(@PathVariable Long id) {
         userService.deleteById(id);
     }

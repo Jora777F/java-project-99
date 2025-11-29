@@ -17,6 +17,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /**
+     * Проводит аутентификацию пользователя по его email.
+     * @param username the username identifying the user whose data is required.
+     * @return основная информация о пользователе
+     * @throws UsernameNotFoundException исключение, которое возникает, если указанный пользователь отсутствует
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)

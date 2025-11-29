@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Сущность запроса пользователя")
+@Schema(description = "Сущность регистрации пользователя")
 public final class UserRequestDto implements Serializable {
 
     @Schema(description = "Имя пользователя", example = "Максим")

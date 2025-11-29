@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,9 +38,11 @@ public class UserController {
             description = "Позволяет получить пользователя по идентификатору",
             responses = {
                 @ApiResponse(responseCode = "200", description = "Пользователь успешно получен",
-                            content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserResponseDto.class))),
                 @ApiResponse(responseCode = "404", description = "Пользователь не найден",
-                            content = @Content(schema = @Schema(implementation = String.class))),
+                            content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                                    schema = @Schema(implementation = String.class))),
             })
     @GetMapping("/{id}")
     public UserResponseDto findById(@PathVariable Long id) {
@@ -50,7 +53,8 @@ public class UserController {
             description = "Позволяет получить список пользователей",
             responses = {
                 @ApiResponse(responseCode = "200", description = "Список пользователей успешно получен",
-                            content = @Content(array = @ArraySchema(arraySchema =
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(arraySchema =
                             @Schema(implementation = UserResponseDto.class)))
                     )})
     @GetMapping
@@ -60,7 +64,8 @@ public class UserController {
 
     @Operation(summary = "Создание пользователя", description = "Позволяет создать пользователя",
             responses = {@ApiResponse(responseCode = "200", description = "Пользователь успешно создан",
-                    content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserResponseDto.class)))
             })
     @PostMapping
     public UserResponseDto save(@RequestBody @Valid UserRequestDto userRequestDto) {
@@ -71,7 +76,8 @@ public class UserController {
             + "информацию о пользователе",
             responses = {@ApiResponse(responseCode = "200", description = "Информация о пользователе "
                     + "успешно обновлена.",
-                    content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserResponseDto.class)))
             })
     @PutMapping("/{id}")
     public UserResponseDto updateById(@PathVariable Long id,
@@ -81,7 +87,8 @@ public class UserController {
 
     @Operation(summary = "Удаление пользователя", description = "Позволяет удалить пользователя",
             responses = {@ApiResponse(responseCode = "200", description = "Пользователь успешно удален",
-                    content = @Content(schema = @Schema(implementation = String.class)))
+                    content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                            schema = @Schema(implementation = String.class)))
             })
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {

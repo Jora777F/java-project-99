@@ -29,6 +29,7 @@ public class DataInitializer implements CommandLineRunner {
             user.setEmail("hexlet@example.com");
             user.setPassword(passwordEncoder.encode("qwerty"));
             userRepository.save(user);
+            initDefaultStatuses();
         }
     }
 

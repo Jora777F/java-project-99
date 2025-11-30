@@ -39,10 +39,10 @@ public class TaskStatusController {
     @Operation(summary = "Получение статуса по идентификатору",
             description = "Позволяет получить статус по идентификатору",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Статус успешно получен",
+                @ApiResponse(responseCode = "200", description = "Статус успешно получен",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = TaskStatusResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "Статус не найден",
+                @ApiResponse(responseCode = "404", description = "Статус не найден",
                             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                                     schema = @Schema(implementation = String.class))),
             })
@@ -54,7 +54,7 @@ public class TaskStatusController {
     @Operation(summary = "Получение списка статусов",
             description = "Позволяет получить список статусов",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Список статусов успешно получен",
+                @ApiResponse(responseCode = "200", description = "Список статусов успешно получен",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     array = @ArraySchema(arraySchema =
                                     @Schema(implementation = TaskStatusResponse.class)))

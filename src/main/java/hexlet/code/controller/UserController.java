@@ -13,7 +13,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,8 +63,11 @@ public class UserController {
                             @Schema(implementation = UserResponseDto.class)))
                     )})
     @GetMapping
-    public List<UserResponseDto> findAll() {
-        return userService.findAll();
+    public ResponseEntity<List<UserResponseDto>> findAll() {
+        List<UserResponseDto> users = userService.findAll();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Total-Count", String.valueOf(users.size()));
+        return new ResponseEntity<>(users, headers, HttpStatus.OK);
     }
 
     @Operation(summary = "Регистрация пользователя", description = "Позволяет создать пользователя",

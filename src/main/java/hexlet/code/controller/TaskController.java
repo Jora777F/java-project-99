@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
+@Tag(name = "Задачи", description = "Взаимодействие с задачами")
+@SecurityRequirement(name = "JWT")
 public class TaskController {
 
     private final TaskService taskService;
@@ -54,7 +58,7 @@ public class TaskController {
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     array = @ArraySchema(arraySchema =
                                     @Schema(implementation = TaskResponseDto.class)))
-                )})
+                    )})
     @GetMapping
     public ResponseEntity<List<TaskResponseDto>> findAll(TaskFilterParams taskFilterParams) {
         List<TaskResponseDto> tasks = taskService.findAll(taskFilterParams);

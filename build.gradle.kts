@@ -47,6 +47,9 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.instancio:instancio-junit:5.5.1")
+	implementation("net.datafaker:datafaker:2.4.2")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	runtimeOnly("org.postgresql:postgresql")

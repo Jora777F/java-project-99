@@ -21,6 +21,6 @@ public class TaskResponseDto implements Serializable {
 
     @JsonProperty("assignee_id")
     private Long assigneeId;
-
+    //TODO: Добавить taskLabelIds
     private Instant createdAt;
 }

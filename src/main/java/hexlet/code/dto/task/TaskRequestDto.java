@@ -17,4 +17,6 @@ public class TaskRequestDto implements Serializable {
     private String status;
     @JsonProperty("assignee_id")
     private Long assigneeId;
+
+    //TODO: Добавить taskLabelIds
 }

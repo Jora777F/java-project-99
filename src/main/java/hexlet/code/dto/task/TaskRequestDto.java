@@ -6,21 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.Instant;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskResponseDto implements Serializable {
-
-    private Long id;
+public class TaskRequestDto implements Serializable {
     private String title;
     private Long index;
     private String content;
     private String status;
-
     @JsonProperty("assignee_id")
     private Long assigneeId;
-
-    private Instant createdAt;
 }

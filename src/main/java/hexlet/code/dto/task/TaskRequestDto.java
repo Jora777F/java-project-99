@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +18,5 @@ public class TaskRequestDto implements Serializable {
     private String status;
     @JsonProperty("assignee_id")
     private Long assigneeId;
-
-    //TODO: Добавить taskLabelIds
+    private Set<Long> taskLabelIds;
 }

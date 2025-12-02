@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +22,6 @@ public class TaskResponseDto implements Serializable {
 
     @JsonProperty("assignee_id")
     private Long assigneeId;
-    //TODO: Добавить taskLabelIds
     private Instant createdAt;
+    private Set<Long> taskLabelIds;
 }

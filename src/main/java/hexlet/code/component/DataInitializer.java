@@ -1,7 +1,9 @@
 package hexlet.code.component;
 
+import hexlet.code.model.Label;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -21,6 +24,7 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final TaskStatusRepository taskStatusRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LabelRepository labelRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -30,6 +34,7 @@ public class DataInitializer implements CommandLineRunner {
             user.setPassword(passwordEncoder.encode("qwerty"));
             userRepository.save(user);
             initDefaultStatuses();
+            initDefaultLabels();
         }
     }
 
@@ -53,5 +58,17 @@ public class DataInitializer implements CommandLineRunner {
             }
         });
         log.info("Total task status: {}", taskStatusRepository.count());
+    }
+
+    private void initDefaultLabels() {
+        List<String> defaultLabels = List.of("feature", "bug");
+        defaultLabels.forEach(name -> {
+            if (labelRepository.findByName(name).isEmpty()) {
+                Label label = new Label();
+                label.setName(name);
+                log.info("Label name before save: {}", label.getName());
+                labelRepository.save(label);
+            }
+        });
     }
 }

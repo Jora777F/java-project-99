@@ -58,12 +58,11 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
 
-        // Updated only basic fields
+        // Обновляем только основные поля
         Task updated = taskMapper.partialUpdate(taskRequest, task);
-
         setAssociations(taskRequest, updated);
 
-        Task saved = taskRepository.save(task);
+        Task saved = taskRepository.save(updated);
         return taskMapper.toTaskResponse(saved);
     }
 
@@ -72,25 +71,22 @@ public class TaskService {
     }
 
     private void setAssociations(TaskRequestDto taskRequest, Task task) {
-        TaskStatus taskStatus = null;
         if (taskRequest.getStatus() != null) {
-            taskStatus = taskStatusRepository.findBySlug(taskRequest.getStatus())
+            TaskStatus taskStatus = taskStatusRepository.findBySlug(taskRequest.getStatus())
                     .orElseThrow(() -> new ResourceNotFoundException("Task status not found"));
+            task.setTaskStatus(taskStatus);
         }
 
-        User user = null;
         if (taskRequest.getAssigneeId() != null) {
-            user = userRepository.findById(taskRequest.getAssigneeId())
+            User user = userRepository.findById(taskRequest.getAssigneeId())
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with id "
                             + taskRequest.getAssigneeId()));
+            task.setAssignee(user);
         }
 
-        List<Label> labels = null;
         if (taskRequest.getTaskLabelIds() != null) {
-            labels = labelRepository.findAllById(taskRequest.getTaskLabelIds());
+            List<Label> labels = labelRepository.findAllById(taskRequest.getTaskLabelIds());
+            task.setLabels(new HashSet<>(labels));
         }
-        task.setTaskStatus(taskStatus);
-        task.setAssignee(user);
-        task.setLabels(labels != null ? new HashSet<>(labels) : new HashSet<>());
     }
 }

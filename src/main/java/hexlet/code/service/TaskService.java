@@ -5,9 +5,11 @@ import hexlet.code.dto.task.TaskRequestDto;
 import hexlet.code.dto.task.TaskResponseDto;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskMapper;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -16,17 +18,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
 
-    //TODO: Добавить LabelRepository
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
     private final TaskStatusRepository taskStatusRepository;
     private final UserRepository userRepository;
+    private final LabelRepository labelRepository;
     private final TaskSpecification taskSpecification;
 
     public TaskResponseDto findById(Long id) {
@@ -82,8 +85,12 @@ public class TaskService {
                             + taskRequest.getAssigneeId()));
         }
 
-        //TODO: Исправить замечания с labels
+        List<Label> labels = null;
+        if (taskRequest.getTaskLabelIds() != null) {
+            labels = labelRepository.findAllById(taskRequest.getTaskLabelIds());
+        }
         task.setTaskStatus(taskStatus);
         task.setAssignee(user);
+        task.setLabels(labels != null ? new HashSet<>(labels) : new HashSet<>());
     }
 }

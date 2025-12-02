@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(
         properties = {
-                "spring.jpa.defer-datasource-initialization=false",
-                "spring.sql.init.mode=never"
+            "spring.jpa.defer-datasource-initialization=false",
+            "spring.sql.init.mode=never"
         }
 )
 @AutoConfigureMockMvc

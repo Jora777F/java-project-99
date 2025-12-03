@@ -16,6 +16,7 @@ public class ModelGenerator {
 
     @Getter
     private Model<Task> taskModel;
+
     @Getter
     private Model<User> userModel;
 

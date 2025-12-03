@@ -29,6 +29,8 @@ jobs:
         run: make lint
 
       - name: Build with Gradle
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           make build
           echo "Build completed successfully with tests and checkstyle"

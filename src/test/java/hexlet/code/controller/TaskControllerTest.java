@@ -98,8 +98,21 @@ class TaskControllerTest {
     @Test
     @DisplayName("Should return status 201, when save task.")
     void saveTask() throws Exception {
-        TaskStatus taskStatus = taskStatusRepository.findBySlug("draft").orElseThrow();
-        Label label = labelRepository.findByName("feature").orElseThrow();
+        TaskStatus taskStatus = taskStatusRepository.findBySlug("draft")
+                .orElseGet(() -> {
+                    TaskStatus status = new TaskStatus();
+                    status.setName("Draft");
+                    status.setSlug("draft");
+                    return taskStatusRepository.save(status);
+                });
+
+        Label label = labelRepository.findByName("feature")
+                .orElseGet(() -> {
+                    Label newLabel = new Label();
+                    newLabel.setName("feature");
+                    return labelRepository.save(newLabel);
+                });
+
         TaskRequestDto data = new TaskRequestDto();
 
         String name = "New Task Name";

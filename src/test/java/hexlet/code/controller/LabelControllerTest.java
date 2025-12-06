@@ -13,7 +13,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -28,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class LabelControllerTest extends BaseControllerTest {
 
     @Autowired
@@ -44,6 +42,7 @@ class LabelControllerTest extends BaseControllerTest {
 
     @BeforeEach
     public void beforeEach() {
+        super.cleanup();
         testLabel = Instancio.of(Label.class)
                 .ignore(field(Label.class, "id"))
                 .create();

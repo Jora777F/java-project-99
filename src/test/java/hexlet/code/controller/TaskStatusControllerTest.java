@@ -14,7 +14,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -29,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class TaskStatusControllerTest extends BaseControllerTest {
 
     @Autowired
@@ -45,6 +43,7 @@ class TaskStatusControllerTest extends BaseControllerTest {
 
     @BeforeEach
     void beforeEach() {
+        super.cleanup();
         testTaskStatus = Instancio.of(TaskStatus.class)
                 .ignore(Select.field(TaskStatus.class, "id"))
                 .create();

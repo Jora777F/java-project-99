@@ -20,7 +20,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
@@ -36,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class TaskControllerTest extends BaseControllerTest {
 
     @Autowired
@@ -61,7 +59,15 @@ class TaskControllerTest extends BaseControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        TaskStatus taskStatus = taskStatusRepository.findBySlug("draft").orElseThrow();
+        super.cleanup();
+        // Создаем статус "draft", если его нет
+        TaskStatus taskStatus = taskStatusRepository.findBySlug("draft")
+                .orElseGet(() -> {
+                    TaskStatus status = new TaskStatus();
+                    status.setName("Draft");
+                    status.setSlug("draft");
+                    return taskStatusRepository.save(status);
+                });
         testTask = Instancio.of(modelGenerator.getTaskModel())
                 .set(Select.field(Task::getAssignee), null)
                 .create();

@@ -9,6 +9,4 @@ class AppApplicationTests {
     @Test
     void contextLoads() {
     }
-
-    //TODO: Написать интеграционные тесты
 }

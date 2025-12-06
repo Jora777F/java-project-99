@@ -1,7 +1,10 @@
 package hexlet.code.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.task.TaskRequestDto;
+import hexlet.code.dto.task.TaskResponseDto;
+import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
@@ -18,12 +21,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -54,6 +60,9 @@ class TaskControllerTest extends BaseControllerTest {
 
     @Autowired
     private ModelGenerator modelGenerator;
+
+    @Autowired
+    private TaskMapper taskMapper;
 
     private Task testTask;
 
@@ -88,10 +97,25 @@ class TaskControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("Should return status 200, when test find all tasks.")
     void findAllTasks() throws Exception {
-        mockMvc.perform(get("/api/tasks")
+        MockHttpServletResponse response = mockMvc.perform(get("/api/tasks")
                         .with(SecurityMockMvcRequestPostProcessors.user("user")))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andReturn()
+                .getResponse();
+        String body = response.getContentAsString();
+
+        List<TaskResponseDto> actualDto = objectMapper.readValue(body, new TypeReference<>() {
+        });
+
+        List<Task> dbTasks = taskRepository.findAllWithAssociations();
+        List<TaskResponseDto> expectedDto = dbTasks
+                .stream()
+                .map(taskMapper::toTaskResponse)
+                .toList();
+
+        assertThat(actualDto)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedDto);
     }
 
     @Test

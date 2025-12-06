@@ -1,7 +1,10 @@
 package hexlet.code.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.user.UserRequestDto;
+import hexlet.code.dto.user.UserResponseDto;
+import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
@@ -13,9 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -40,6 +47,9 @@ class UserControllerTest extends BaseControllerTest {
     @Autowired
     private ModelGenerator modelGenerator;
 
+    @Autowired
+    private UserMapper userMapper;
+
     private User testUser;
 
     @BeforeEach
@@ -53,10 +63,23 @@ class UserControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("Should return status ok, when test find all users.")
     void findAllTest() throws Exception {
-        mockMvc.perform(get("/api/users")
+         MockHttpServletResponse response = mockMvc.perform(get("/api/users")
                         .with(SecurityMockMvcRequestPostProcessors.user("admin")))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andReturn()
+                .getResponse();
+
+        String body = response.getContentAsString();
+        List<UserResponseDto> actualDto = objectMapper.readValue(body, new TypeReference<>() {});
+
+        List<User> dbUsers = userRepository.findAll();
+        List<UserResponseDto> expectedDTOs = dbUsers.stream()
+                .map(userMapper::toDto)
+                .toList();
+
+        assertThat(actualDto)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedDTOs);
     }
 
     @Test

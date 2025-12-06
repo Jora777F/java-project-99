@@ -1,6 +1,9 @@
 package hexlet.code.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.label.LabelResponseDto;
+import hexlet.code.mapper.LabelMapper;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
 import org.instancio.Instancio;
@@ -11,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -37,6 +43,9 @@ class LabelControllerTest extends BaseControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private LabelMapper labelMapper;
 
     private Label testLabel;
 
@@ -61,10 +70,24 @@ class LabelControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("Should return status code 200, when finding all labels.")
     public void findAllLabels() throws Exception {
-        mockMvc.perform(get("/api/labels")
+
+        MockHttpServletResponse response = mockMvc.perform(get("/api/labels")
                         .with(SecurityMockMvcRequestPostProcessors.user("user")))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andReturn()
+                .getResponse();
+        String body = response.getContentAsString();
+
+        List<LabelResponseDto> actualDto = objectMapper.readValue(body, new TypeReference<>() {});
+
+        List<Label> dbLabels = labelRepository.findAll();
+        List<LabelResponseDto> expectedDTOs = dbLabels.stream()
+                .map(labelMapper::toLabelResponse)
+                .toList();
+
+        assertThat(actualDto)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedDTOs);
     }
 
     @Test

@@ -63,14 +63,14 @@ class UserControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("Should return status ok, when test find all users.")
     void findAllTest() throws Exception {
-         MockHttpServletResponse response = mockMvc.perform(get("/api/users")
+        MockHttpServletResponse response = mockMvc.perform(get("/api/users")
                         .with(SecurityMockMvcRequestPostProcessors.user("admin")))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
 
         String body = response.getContentAsString();
-        List<UserResponseDto> actualDto = objectMapper.readValue(body, new TypeReference<>() {});
+        List<UserResponseDto> actualDto = objectMapper.readValue(body, new TypeReference<>() { });
 
         List<User> dbUsers = userRepository.findAll();
         List<UserResponseDto> expectedDTOs = dbUsers.stream()

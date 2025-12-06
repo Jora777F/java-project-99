@@ -78,7 +78,7 @@ class LabelControllerTest extends BaseControllerTest {
                 .getResponse();
         String body = response.getContentAsString();
 
-        List<LabelResponseDto> actualDto = objectMapper.readValue(body, new TypeReference<>() {});
+        List<LabelResponseDto> actualDto = objectMapper.readValue(body, new TypeReference<>() { });
 
         List<Label> dbLabels = labelRepository.findAll();
         List<LabelResponseDto> expectedDTOs = dbLabels.stream()

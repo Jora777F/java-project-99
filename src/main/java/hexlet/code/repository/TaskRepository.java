@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificationExecutor<Task> {
     Optional<Task> findByName(String taskName);
 
-    @Query("SELECT DISTINCT t FROM Task t LEFT JOIN FETCH t.taskStatus LEFT JOIN FETCH t.assignee LEFT JOIN FETCH t.labels")
+    @Query("SELECT DISTINCT t FROM Task t "
+            + "LEFT JOIN FETCH t.taskStatus "
+            + "LEFT JOIN FETCH t.assignee LEFT JOIN FETCH t.labels")
     List<Task> findAllWithAssociations();
 }

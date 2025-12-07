@@ -75,8 +75,9 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDto.class)))
             })
     @PostMapping
-    public UserResponseDto save(@RequestBody @Valid UserRequestDto userRequestDto) {
-        return userService.save(userRequestDto);
+    public ResponseEntity<UserResponseDto> save(@RequestBody @Valid UserRequestDto userRequestDto) {
+        UserResponseDto body = userService.save(userRequestDto);
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Обновление пользователя", description = "Позволяет обновить "

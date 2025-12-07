@@ -125,7 +125,7 @@ class UserControllerTest extends BaseControllerTest {
                         .content(objectMapper.writeValueAsString(data))
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(SecurityMockMvcRequestPostProcessors.user("user")))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value(data.getEmail()))
                 .andDo(print());
     }

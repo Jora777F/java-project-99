@@ -101,7 +101,8 @@ public class UserController {
             })
     @DeleteMapping("/{id}")
     @PreAuthorize("@userUtils.isOwner(#id, authentication.name)")
-    public void deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         userService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

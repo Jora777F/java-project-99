@@ -87,7 +87,7 @@ class UserControllerTest extends BaseControllerTest {
     void deleteByIdTest() throws Exception {
         mockMvc.perform(delete("/api/users/{id}", testUser.getId())
                         .with(SecurityMockMvcRequestPostProcessors.user(testUser.getEmail())))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 
